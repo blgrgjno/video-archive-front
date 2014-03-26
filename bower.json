@@ -1,0 +1,9 @@
+{
+  "name": "video2",
+  "private": true,
+  "dependencies": {
+    "popcornjs": "~1.5.6",
+    "purl": "~2.3.1"
+  },
+  "devDependencies": {}
+}

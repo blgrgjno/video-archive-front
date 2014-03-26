@@ -7,9 +7,22 @@ lib-cov
 *.pid
 *.gz
 
+# dont include video files
+app/data
+
+# don't include generated css file
+app/styles/main.css
+
 pids
 logs
 results
+
+node_modules
+dist
+.tmp
+.sass-cache
+app/bower_components
+test/bower_components
 
 npm-debug.log
 node_modules
