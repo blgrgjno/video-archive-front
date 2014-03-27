@@ -13,17 +13,27 @@ body {
 }
 
 .panel {
-  background: #000;
+  background: #fff;
   height: 370px;
-  padding-top: 20px;
+  padding-top: 0px;
   position: relative;
+
+  body.has-slides & {
+    background: #111;
+    padding-top: 20px;
+  }
 }
 
 .selectpicker {
+  display: none;
   border: 1px solid red;
   right: 10px;
   top: 340px;
   position:absolute;
+
+  body.has-slides & {
+    display: inline;
+  }
 }
 
 /* video */

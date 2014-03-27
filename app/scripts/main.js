@@ -1,4 +1,4 @@
-/* global escape: true, purl: true, Popcorn: true */
+/* global purl: true, Popcorn: true */
 (function() {
   'use strict';
   // main popcorn
@@ -18,9 +18,9 @@
       var html = '<h2> * Error: no slide available * </h2>';
 
       if (tmpSlide) {
-        html = '<img src="' + escape(slideURL) + '">';
+        html = '<img src="' + encodeURI(slideURL) + '">';
       } else if (title) {
-        html = '<h2>' + escape(title) + '</h2>';
+        html = '<h2>' + encodeURI(title) + '</h2>';
       }
 
       return html;
@@ -69,10 +69,6 @@
   function loadVideo(videoId, err, ok) {
     var request;
 
-    if (! /^[-a-f0-9]+$/.test(videoId) ) {
-      return err('internal error');
-    }
-
     request = new XMLHttpRequest();
     request.open('GET', 'data/video/' + videoId + '/meta.json', true);
 
@@ -100,49 +96,54 @@
    * data from
    */
   function loadSlidesAndChapters(videoId) {
-    loadVideo(videoId,
-              function(msg) {
-                throw 'Error while loading video `' + msg + '`';
-              },
-              function(data) {
-                var scriptEl, videoFile;
-                var slides = data.slides;
-                var numSlidesOrChapters = slides.length;
+    loadVideo(videoId, function(msg) {
+      throw 'Error while loading video `' + msg + '`';
+    }, function(data) {
+      var scriptEl, videoFile, el;
+      var slides = data.slides || [];
+      var numSlidesOrChapters = slides ? slides.length : 0;
 
-                forEach(slides, function(slide, index) {
-                  var isChapter = ('true' === slide.isChapter[0]);
-                  var i, slideURL;
+      if (numSlidesOrChapters > 0) {
+        el = document.getElementsByTagName('body')[0];
+        if (el.classList) {
+          el.classList.add("has-slides");
+        } else {
+          el.className += ' ' + 'has-slides';
+        }
+      }
 
-                  if (isChapter) {
-                    // make footnote timeline for chapters
-                    for (i = index; i < numSlidesOrChapters; i++) {
+      forEach(slides, function(slide, index) {
+        var isChapter = ('true' === slide.isChapter[0]);
+        var i, slideURL;
 
-                      if ('true' === slides[i].isChapter[0]) {
-                        loadChapter(slide, slides[i].startTime[0]);
-                        break;
-                      }
-                    }
-                  } else {
-                    // make footnote timeline for slides
-                    for (i = index+1; i < numSlidesOrChapters; i++) {
-                      if ('false' === slides[i].isChapter[0]) {
-                        slideURL = 'data/video/' +
-                          escape(data.itemID) + '/timeline/' + slide.slideURL[0];
-                        loadSlide(slide, slides[i].startTime[0], slideURL);
-                        break;
-                      }
-                    }
-                  }
-                });
+        if (isChapter) {
+          for (i = index; i < numSlidesOrChapters; i++) {
+            if ('true' === slides[i].isChapter[0]) {
+              loadChapter(slide, slides[i].startTime[0]);
+              break;
+            }
+          }
+        } else {
+          // make footnote timeline for slides
+          for (i = index+1; i < numSlidesOrChapters; i++) {
+            if ('false' === slides[i].isChapter[0]) {
+              slideURL = 'data/video/' +
+                encodeURI(data.itemID) + '/timeline/' + slide.slideURL[0];
+              loadSlide(slide, slides[i].startTime[0], slideURL);
+              break;
+            }
+          }
+        }
+      });
 
-                // add video to media object
-                videoFile = 'data/video/' + escape(data.itemID) + '/' +
-                  escape(data.videoFile);
+      // add video to media object
+      videoFile = 'data/video/' + encodeURI(data.itemID) + '/' +
+        encodeURI(data.videoFile);
 
-                scriptEl = document.createElement('source');
-                scriptEl.setAttribute('src', videoFile);
-                document.getElementById('ourvideo').appendChild(scriptEl);
-              });
+      scriptEl = document.createElement('source');
+      scriptEl.setAttribute('src', videoFile);
+      document.getElementById('ourvideo').appendChild(scriptEl);
+    });
   }
 
   // --
@@ -177,18 +178,27 @@
     }
   }
 
+  function getParameterByName(name) {
+    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+        results = regex.exec(location.search);
+    return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+  }
+
   ready(function() {
-    var url = purl();
-    var videoId = escape(url.param('watch'));
+    var videoId = getParameterByName('watch');
+
+    if (! /^[-a-f0-9]+$/.test(videoId) ) {
+      throw TypeError('Wrongly format watch parameter (VideoId).'
+                      + ' Doesn\'t seem like a GUID');
+    }
+
     popcorn = Popcorn('#ourvideo');
     loadSlidesAndChapters(videoId);
     addEventListener(document.getElementsByTagName('select')[0],
                      'change',
                      function() {
-                        popcorn.currentTime(chapters[this.selectedIndex]);
-                      });
+                       popcorn.currentTime(chapters[this.selectedIndex]);
+                     });
   });
-
-
-
 })();
