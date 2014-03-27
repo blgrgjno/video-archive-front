@@ -1,4 +1,4 @@
-/* global purl: true, Popcorn: true */
+/* global Popcorn: true */
 (function() {
   'use strict';
   // main popcorn
@@ -106,7 +106,7 @@
       if (numSlidesOrChapters > 0) {
         el = document.getElementsByTagName('body')[0];
         if (el.classList) {
-          el.classList.add("has-slides");
+          el.classList.add('has-slides');
         } else {
           el.className += ' ' + 'has-slides';
         }
@@ -179,10 +179,10 @@
   }
 
   function getParameterByName(name) {
-    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
-    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+    name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+    var regex = new RegExp('[\\?&]' + name + '=([^&#]*)'),
         results = regex.exec(location.search);
-    return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+    return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
   }
 
   ready(function() {
@@ -196,8 +196,7 @@
     popcorn = Popcorn('#ourvideo');
     loadSlidesAndChapters(videoId);
     addEventListener(document.getElementsByTagName('select')[0],
-                     'change',
-                     function() {
+                     'change', function() {
                        popcorn.currentTime(chapters[this.selectedIndex]);
                      });
   });
