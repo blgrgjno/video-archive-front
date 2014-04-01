@@ -9,6 +9,7 @@ lib-cov
 
 # dont include video files
 app/data
+data
 
 # don't include generated css file
 app/styles/main.css
