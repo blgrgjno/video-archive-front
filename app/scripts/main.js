@@ -93,30 +93,24 @@
   /**
    * Loads all slides and chapters
    * @param {string} videoId - the GUID of the video
-   * data from
+   * @param {function} onData - callback with video as parameter, for
+   * called each video
    */
-  function loadSlidesAndChapters(videoId) {
+  function loadSlidesAndChapters(videoId, onData) {
     loadVideo(videoId, function(msg) {
       throw 'Error while loading video `' + msg + '`';
     }, function(data) {
-      var scriptEl, videoFile, el;
       var slides = data.slides || [];
       var numSlidesOrChapters = slides ? slides.length : 0;
-
-      if (numSlidesOrChapters > 0) {
-        el = document.getElementsByTagName('body')[0];
-        if (el.classList) {
-          el.classList.add('has-slides');
-        } else {
-          el.className += ' ' + 'has-slides';
-        }
-      }
+      var numSlides = 0;
+      var numChapters = 0;
 
       forEach(slides, function(slide, index) {
         var isChapter = ('true' === slide.isChapter[0]);
         var i, slideURL;
 
         if (isChapter) {
+          numChapters++;
           for (i = index; i < numSlidesOrChapters; i++) {
             if ('true' === slides[i].isChapter[0]) {
               loadChapter(slide, slides[i].startTime[0]);
@@ -124,6 +118,7 @@
             }
           }
         } else {
+          numSlides++;
           // make footnote timeline for slides
           for (i = index+1; i < numSlidesOrChapters; i++) {
             if ('false' === slides[i].isChapter[0]) {
@@ -136,13 +131,28 @@
         }
       });
 
-      // add video to media object
-      videoFile = 'data/video/' + encodeURI(data.itemID) + '/' +
-        encodeURI(data.videoFile);
+      var el;
+      if (numSlides > 0) {
+        el = document.getElementsByTagName('body')[0];
+        if (el.classList) {
+          el.classList.add('has-slides');
+        } else {
+          el.className += ' ' + 'has-slides';
+        }
+      }
 
-      scriptEl = document.createElement('source');
-      scriptEl.setAttribute('src', videoFile);
-      document.getElementById('ourvideo').appendChild(scriptEl);
+      if (numChapters == 0) {
+        el = document.getElementsByTagName('body')[0];
+        if (el.classList) {
+          el.classList.add('no-chapters');
+        } else {
+          el.className += ' ' + 'no-chapters';
+        }
+      }
+
+      if (onData && typeof onData == "function") {
+        onData(data);
+      }
     });
   }
 
@@ -185,6 +195,16 @@
     return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
   }
 
+  function loadVideoFile(data) {
+      // add video to media object
+    var videoFile = 'data/video/' + encodeURI(data.itemID) + '/' +
+          encodeURI(data.videoFile);
+
+    var scriptEl = document.createElement('source');
+    scriptEl.setAttribute('src', videoFile);
+    document.getElementById('ourvideo').appendChild(scriptEl);
+  }
+
   ready(function() {
     var videoId = getParameterByName('watch');
 
@@ -194,7 +214,7 @@
     }
 
     popcorn = Popcorn('#ourvideo');
-    loadSlidesAndChapters(videoId);
+    loadSlidesAndChapters(videoId, loadVideoFile);
     addEventListener(document.getElementsByTagName('select')[0],
                      'change', function() {
                        popcorn.currentTime(chapters[this.selectedIndex]);

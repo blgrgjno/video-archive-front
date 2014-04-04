@@ -34,6 +34,10 @@ body {
   body.has-slides & {
     display: inline;
   }
+
+  body.no-chapters & {
+    display: none;
+  }
 }
 
 /* video */
