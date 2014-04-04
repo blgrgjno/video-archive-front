@@ -120,18 +120,29 @@
         } else {
           numSlides++;
           // make footnote timeline for slides
+          var loaded = false;
           for (i = index+1; i < numSlidesOrChapters; i++) {
             if ('false' === slides[i].isChapter[0]) {
               slideURL = 'data/video/' +
                 encodeURI(data.itemID) + '/timeline/' + slide.slideURL[0];
               loadSlide(slide, slides[i].startTime[0], slideURL);
+              loaded = true;
               break;
             }
+          }
+
+          if (! loaded) {
+            // probably only one slide
+            slideURL = 'data/video/' +
+              encodeURI(data.itemID) + '/timeline/' +
+              slide.slideURL[0];
+            loadSlide(slide, data.videoOut[0], slideURL);
           }
         }
       });
 
       var el;
+
       if (numSlides > 0) {
         el = document.getElementsByTagName('body')[0];
         if (el.classList) {
@@ -141,7 +152,7 @@
         }
       }
 
-      if (numChapters == 0) {
+      if (0 === numChapters) {
         el = document.getElementsByTagName('body')[0];
         if (el.classList) {
           el.classList.add('no-chapters');
@@ -150,7 +161,7 @@
         }
       }
 
-      if (onData && typeof onData == "function") {
+      if (onData && typeof 'function' === onData) {
         onData(data);
       }
     });
@@ -209,15 +220,14 @@
     var videoId = getParameterByName('watch');
 
     if (! /^[-a-f0-9]+$/.test(videoId) ) {
-      throw TypeError('Wrongly format watch parameter (VideoId).'
-                      + ' Doesn\'t seem like a GUID');
+      throw TypeError('Wrongly format watch parameter (VideoId). Doesn\'t seem like a GUID');
     }
 
     popcorn = Popcorn('#ourvideo');
     loadSlidesAndChapters(videoId, loadVideoFile);
     addEventListener(document.getElementsByTagName('select')[0],
                      'change', function() {
-                       popcorn.currentTime(chapters[this.selectedIndex]);
-                     });
+                        popcorn.currentTime(chapters[this.selectedIndex]);
+                      });
   });
 })();
