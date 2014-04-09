@@ -161,7 +161,7 @@
         }
       }
 
-      if (onData && typeof 'function' === onData) {
+      if (onData && typeof onData === 'function') {
         onData(data);
       }
     });
