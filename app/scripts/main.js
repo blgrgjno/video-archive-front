@@ -207,8 +207,9 @@
   }
 
   function loadVideoFile(data) {
+    var encodedVideoFile = encodeURI(data.videoFile);
     var videoFile = 'data/video/' + encodeURI(data.itemID) + '/' +
-          encodeURI(data.videoFile);
+          encodedVideoFile;
 
     // add video to media object
     var scriptEl = document.createElement('source');
@@ -218,8 +219,11 @@
     // add download link
     var aEl = document.querySelector('.download').
           getElementsByTagName('a')[0];
+
     aEl.href = videoFile;
-    aEl.download = encodeURI(data.videoFile);
+    aEl.download = encodedVideoFile;
+    aEl.title = 'Last ned ' + encodedVideoFile;
+
     aEl.parentNode.style.display = 'block';
   }
 
