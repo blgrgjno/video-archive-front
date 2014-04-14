@@ -219,8 +219,20 @@
   ready(function() {
     var videoId = getParameterByName('watch');
 
+    if (! videoId) {
+      throw TypeError('You need to provide a query parameter `watch`'+
+                      ' with a guid');
+    }
+
     if (! /^[-a-f0-9]+$/.test(videoId) ) {
-      throw TypeError('Wrongly format watch parameter (VideoId). Doesn\'t seem like a GUID');
+      throw TypeError('The query parameter `watch` contains illegal'+
+                      ' characters');
+    }
+
+    if (! (videoId && videoId.toString().length === 36)) {
+      throw TypeError('Expected query parameter `watch` to be of'+
+                      ' length 36 (not ' + videoId.toString().length +
+                      ')');
     }
 
     popcorn = Popcorn('#ourvideo');
