@@ -7,6 +7,10 @@ body {
   text-align: center;
 }
 
+a {
+  color: #003173;
+}
+
 .container {
   width: 975px;
   display: inline-block;
@@ -31,6 +35,9 @@ body {
   top: 340px;
   position:absolute;
 
+  /* prevent collision with download area */
+  max-width: 700px;
+
   body.has-slides & {
     display: inline;
   }
@@ -53,6 +60,27 @@ body {
   -webkit-box-shadow: 0 10px 6px -6px #777;
   -moz-box-shadow: 0 10px 6px -6px #777;
   box-shadow: 0 10px 6px -6px #777;
+}
+
+.download {
+  display: none; /* initially hidden */
+  width: 540px;
+  margin:0 auto; /* center */
+  text-align: left;
+  left: -4px;
+  position:relative;
+  font-size: 0.8rem;
+  font-family: Arial, sans-serif;
+
+  body.has-slides & {
+    width: 100%;
+    left: 14px;
+
+    a {
+      color: #FFFFFF;
+    }
+  }
+
 }
 
 .container-narrow > hr {

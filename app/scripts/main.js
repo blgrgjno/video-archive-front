@@ -207,13 +207,20 @@
   }
 
   function loadVideoFile(data) {
-      // add video to media object
     var videoFile = 'data/video/' + encodeURI(data.itemID) + '/' +
           encodeURI(data.videoFile);
 
+    // add video to media object
     var scriptEl = document.createElement('source');
     scriptEl.setAttribute('src', videoFile);
     document.getElementById('ourvideo').appendChild(scriptEl);
+
+    // add download link
+    var aEl = document.querySelector('.download').
+          getElementsByTagName('a')[0];
+    aEl.href = videoFile;
+    aEl.download = encodeURI(data.videoFile);
+    aEl.parentNode.style.display = 'block';
   }
 
   ready(function() {
