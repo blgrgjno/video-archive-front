@@ -16,10 +16,10 @@ Will load the video id given in the ```watch``` query parameter.
 
 E.g.
 
-```http://video/index.html?watch=84db7c47-ee64-41b8-82e2-dcaf515d2cda```
+```
+http://video/index.html?watch=84db7c47-ee64-41b8-82e2-dcaf515d2cda```
 
 ...should load the video in ```data/video/84db7c47-ee64-41b8-82e2-dcaf515d2cda```
-
 
 ## Build
 
