@@ -3,20 +3,31 @@
 > Video player based on popcorn.js
 
 For playing video synchronized with image slides using the footnote
-plugin. Requires a well-known file structure with a meta file.
+plugin. Requires a well-known file structure with a meta file located
+in the ```data``` folder in the root of the installed app.
+
+Supports two different modes. One with slides and one without.
+
+Will hide chapter selector if there are no chapters in file
+
+## Usage
 
 Will load the video id given in the ```watch``` query parameter.
 
 E.g.
 
+```http://video/index.html?watch=84db7c47-ee64-41b8-82e2-dcaf515d2cda```
+
+...should load the video in ```data/video/84db7c47-ee64-41b8-82e2-dcaf515d2cda```
+
+
+## Build
+
+To build in the ```dist``` folder:
+
+```bash
+$ grunt build
 ```
-http://video/index.html?watch=84db7c47-ee64-41b8-82e2-dcaf515d2cda
-
-```
-
-Supports two different modes. One with slides and one without.
-
-Will hide chapter selector if there are no chapters in file
 
 ## Filestructure
 
@@ -38,8 +49,7 @@ data
 ...and so on.
 ```
 
-```timeline``` folder contains a list of png slides that is listed in
-meta.json
+```timeline``` folder contains a png slides that is listed in meta.json as slides/slideURL
 
 ```metadata.xml``` the original metadata.xml from fluvi
 
@@ -48,7 +58,7 @@ meta.json
 A modified JSON file converted from metadata.xml with some
 modifications.
 
-```
+```json
 {
  "itemID": [
   "84db7c47-ee64-41b8-82e2-dcaf515d2cda"
@@ -125,3 +135,7 @@ modifications.
  ]
 }
 ```
+
+## Testing
+
+Nope :(
