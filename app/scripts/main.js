@@ -27,6 +27,9 @@
     }
 
     if (popcorn) {
+/*      console.log('Added slide (start=%d, end=%d)',
+                  slide.startTime[0], end);
+*/
       popcorn.footnote({
         start: slide.startTime[0],
         end: end,
@@ -133,10 +136,11 @@
 
           if (! loaded) {
             // probably only one slide
+            var end = parseInt(data.videoOut[0]) || 999999;
             slideURL = 'data/video/' +
               encodeURI(data.itemID) + '/timeline/' +
               slide.slideURL[0];
-            loadSlide(slide, data.videoOut[0], slideURL);
+            loadSlide(slide, end, slideURL);
           }
         }
       });
