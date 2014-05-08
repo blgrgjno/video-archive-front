@@ -1,10 +1,13 @@
 // bower:scss
 // endbower
-
 body {
   margin:0;
   padding:0;
-  text-align: center;
+  text-align: left;
+
+  &.has-slides {
+    text-align: center;
+  }
 }
 
 a {
@@ -65,16 +68,18 @@ a {
 .download {
   display: none; /* initially hidden */
   width: 540px;
-  margin:0 auto; /* center */
   text-align: left;
-  left: -4px;
-  position:relative;
+  padding:5px;
+  margin: 0px;
+
   font-size: 0.8rem;
   font-family: Arial, sans-serif;
 
   body.has-slides & {
     width: 100%;
     left: 14px;
+    margin:0 auto; /* center */
+    position:relative;
 
     a {
       color: #FFFFFF;
