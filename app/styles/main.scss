@@ -33,13 +33,13 @@ a {
 
 .selectpicker {
   display: none;
-  border: 1px solid red;
   right: 10px;
   top: 340px;
   position:absolute;
+  z-index: 10;
 
   /* prevent collision with download area */
-  max-width: 700px;
+  max-width: 500px;
 
   body.has-slides & {
     display: inline;
@@ -76,9 +76,8 @@ a {
   font-family: Arial, sans-serif;
 
   body.has-slides & {
-    width: 100%;
+    width: 450px;
     left: 14px;
-    margin:0 auto; /* center */
     position:relative;
 
     a {
