@@ -53,7 +53,7 @@
   /**
    * Loads a chapter
    */
-  function loadChapter(chapter/*, end*/) {
+  function loadChapter(chapter) {
     var start = chapter.startTime[0];
     var title = chapter.title[0];
 
@@ -224,6 +224,30 @@
     return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
   }
 
+  function addPoster(poster) {
+    if (popcorn.media) {
+      popcorn.media.setAttribute('poster', poster);
+    }
+  }
+
+  function addDownloadLink(videoFile, encodedVideoFile, filenameAfterDownload) {
+    // add download link
+    var aEl = document.querySelector('.download').
+          getElementsByTagName('a')[0];
+
+    filenameAfterDownload = filenameAfterDownload || encodedVideoFile;
+
+    aEl.href = videoFile;
+    aEl.download = filenameAfterDownload;
+    aEl.title = 'Last ned ' + filenameAfterDownload;
+
+    aEl.parentNode.style.display = 'block';
+  }
+
+  function updatePageTitle(title) {
+    document.title = title;
+  }
+
   function loadVideoFile(data) {
     var encodedVideoFile = encodeURI(data.videoFile);
     var videoFile = 'data/video/' + encodeURI(data.itemID) + '/' +
@@ -234,15 +258,11 @@
     scriptEl.setAttribute('src', videoFile);
     document.getElementById('ourvideo').appendChild(scriptEl);
 
-    // add download link
-    var aEl = document.querySelector('.download').
-          getElementsByTagName('a')[0];
-
-    aEl.href = videoFile;
-    aEl.download = encodedVideoFile;
-    aEl.title = 'Last ned ' + encodedVideoFile;
-
-    aEl.parentNode.style.display = 'block';
+    addDownloadLink(videoFile, encodedVideoFile, data.title + '.mp4');
+    if (data.poster) {
+      addPoster(encodeURI('data/video/' + data.itemID + '/' + data.poster));
+    }
+    updatePageTitle(data.title);
   }
 
   ready(function() {
