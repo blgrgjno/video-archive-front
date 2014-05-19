@@ -30,14 +30,6 @@
     }
 
     if (popcorn) {
-
-/*      popcorn.footnote({
-        start: startTime,
-        end: endTime,
-        target: 'slides',
-        text: getHTML()
-      });
-*/
       // dont add if the values are suspect
       if (startTime !== endTime &&
           (0 !== startTime || MAX_TIME !== endTime) &&
@@ -48,7 +40,7 @@
           start: startTime,
           end: endTime,
           target: 'slides',
-          direction: 'up',
+          //direction: 'up',
           text: getHTML()
         });
       } else {
