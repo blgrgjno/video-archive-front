@@ -2,7 +2,7 @@
   "name": "video2",
   "private": true,
   "dependencies": {
-    "popcornjs": "~1.5.6",
+    "popcornjs": "~1.5.6"
   },
   "devDependencies": {}
 }
