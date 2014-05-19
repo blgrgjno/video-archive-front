@@ -3,6 +3,7 @@
   'use strict';
   // main popcorn
   var popcorn = null;
+  var MAX_TIME=99999;
 
   // Array that stores the chapters
   var chapters = [];
@@ -12,6 +13,8 @@
    */
   function loadSlide(slide, end, slideURL) {
     var title = slide.title[0];
+    var startTime = Number(slide.startTime[0]);
+    var endTime = Number(end);
 
     function getHTML() {
       var tmpSlide = slide.slideURL[0];
@@ -27,15 +30,31 @@
     }
 
     if (popcorn) {
-/*      console.log('Added slide (start=%d, end=%d)',
-                  slide.startTime[0], end);
-*/
-      popcorn.footnote({
-        start: slide.startTime[0],
-        end: end,
-        target: '#slides',
+
+/*      popcorn.footnote({
+        start: startTime,
+        end: endTime,
+        target: 'slides',
         text: getHTML()
       });
+*/
+      // dont add if the values are suspect
+      if (startTime !== endTime &&
+          (0 !== startTime || MAX_TIME !== endTime) &&
+         (startTime < endTime)) {
+        console.log('Added slide (start=%d, end=%d)',
+                    startTime, endTime);
+        popcorn.footnote({
+          start: startTime,
+          end: endTime,
+          target: 'slides',
+          direction: 'up',
+          text: getHTML()
+        });
+      } else {
+        console.log('Ignoring slide with start=%d and end=%d',
+                    startTime, endTime);
+      }
     }
   }
 
@@ -127,8 +146,11 @@
           for (i = index+1; i < numSlidesOrChapters; i++) {
             if ('false' === slides[i].isChapter[0]) {
               slideURL = 'data/video/' +
-                encodeURI(data.itemID) + '/timeline/' + slide.slideURL[0];
-              loadSlide(slide, slides[i].startTime[0], slideURL);
+                encodeURI(data.itemID) + '/timeline/' +
+                slide.slideURL[0];
+              // set next slides starttime as endtime
+              var endTime = slides[i].startTime[0];
+              loadSlide(slide, endTime, slideURL);
               loaded = true;
               break;
             }
@@ -136,7 +158,7 @@
 
           if (! loaded) {
             // probably only one slide
-            var end = parseInt(data.videoOut[0]) || 999999;
+            var end = parseInt(data.videoOut[0]) || MAX_TIME;
             slideURL = 'data/video/' +
               encodeURI(data.itemID) + '/timeline/' +
               slide.slideURL[0];
