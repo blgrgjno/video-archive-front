@@ -125,6 +125,14 @@
         var isChapter = ('true' === slide.isChapter[0]);
         var i, slideURL;
 
+        // Ignore slides not cued
+        if ("false" === slide.isCued[0]) {
+          return;
+        }
+
+        // TODO: add logic to ignore everything except 1 with negative
+        // starttime
+
         if (isChapter) {
           numChapters++;
           for (i = index; i < numSlidesOrChapters; i++) {
