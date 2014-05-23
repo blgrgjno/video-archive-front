@@ -54,15 +54,24 @@ a {
 #ourvideo {
   width: 540px;
   height: 304px;
+  display: none;
+
+  body.has-loaded & {
+    display: inline;
+  }
 }
 
 /* slides */
 #slides {
   border: 2px solid #eee;
-  display: inline-block;
+  display: none;
   -webkit-box-shadow: 0 10px 6px -6px #777;
   -moz-box-shadow: 0 10px 6px -6px #777;
   box-shadow: 0 10px 6px -6px #777;
+
+  body.has-loaded & {
+    display: inline-block;
+  }
 }
 
 .download {
@@ -75,6 +84,12 @@ a {
   font-size: 0.8rem;
   font-family: Arial, sans-serif;
 
+  display: none;
+
+  body.has-loaded & {
+    display: block;
+  }
+
   body.has-slides & {
     width: 450px;
     left: 14px;
@@ -84,7 +99,29 @@ a {
       color: #FFFFFF;
     }
   }
+}
 
+/* UI error handling */
+.error-message {
+  font-size: 24px;
+  color: #111;
+  font-family: Helvetica;
+  position: fixed;
+  top:100px;
+  left:100px;
+  display: none;
+  width: 400px;
+
+  body.has-error & {
+    display: block;
+ }
+}
+
+/* Hide it all, if error */
+#ourvideo,#slides,.download {
+  body.has-error & {
+    display: none;
+  }
 }
 
 .container-narrow > hr {

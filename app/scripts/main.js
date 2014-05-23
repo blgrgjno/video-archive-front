@@ -47,6 +47,8 @@
         console.log('Ignoring slide with start=%d and end=%d',
                     startTime, endTime);
       }
+    } else {
+      console.log('Can\'t find popcorn. Ignoring slides');
     }
   }
 
@@ -92,7 +94,7 @@
           // Success!
           return ok(JSON.parse(this.responseText));
         } else {
-          // Error :(
+          return err('Unable to find video');
         }
       }
       return null;
@@ -110,9 +112,9 @@
    * @param {function} onData - callback with video as parameter, for
    * called each video
    */
-  function loadSlidesAndChapters(videoId, onData) {
-    loadVideo(videoId, function(msg) {
-      throw 'Error while loading video `' + msg + '`';
+  function loadSlidesAndChapters(videoId, onData, onError) {
+    loadVideo(videoId, function(errorMsg) {
+      onError(errorMsg);
     }, function(data) {
       var slides = data.slides || [];
       var numSlidesOrChapters = slides ? slides.length : 0;
@@ -159,26 +161,25 @@
         }
       });
 
-      var el;
-
+      // Add has-slides class to body, if there are slides
       if (numSlides > 0) {
-        el = document.getElementsByTagName('body')[0];
-        if (el.classList) {
-          el.classList.add('has-slides');
+        if (document.body.classList) {
+          document.body.classList.add('has-slides');
         } else {
-          el.className += ' ' + 'has-slides';
+          document.body.className += ' ' + 'has-slides';
         }
       }
 
+      // Add no-chapters if chapters are missing
       if (0 === numChapters) {
-        el = document.getElementsByTagName('body')[0];
-        if (el.classList) {
-          el.classList.add('no-chapters');
+        if (document.body.classList) {
+          document.body.classList.add('no-chapters');
         } else {
-          el.className += ' ' + 'no-chapters';
+          document.body.className += ' ' + 'no-chapters';
         }
       }
 
+      // Perform callback
       if (onData && typeof onData === 'function') {
         onData(data);
       }
@@ -248,6 +249,22 @@
     document.title = title;
   }
 
+  /**
+   * Will show error message in an catastophic fashion
+   */
+  function showErrorMessage(msg) {
+    // Rest is done via CSS
+    if (document.body.classList) {
+      document.body.classList.add('has-error');
+    } else {
+      document.body.className += ' ' + 'has-error';
+    }
+
+    // Update error message
+    document.querySelector('.error-message')
+      .textContent = 'Can\'t play video because of an error: `' + msg + '`';
+  }
+
   function loadVideoFile(data) {
     var encodedVideoFile = encodeURI(data.videoFile);
     var videoFile = 'data/video/' + encodeURI(data.itemID) + '/' +
@@ -263,29 +280,44 @@
       addPoster(encodeURI('data/video/' + data.itemID + '/' + data.poster));
     }
     updatePageTitle(data.title);
+
+    if (document.body.classList) {
+      document.body.classList.add('has-loaded');
+    } else {
+      document.body.className += ' ' + 'has-loaded';
+    }
   }
 
   ready(function() {
     var videoId = getParameterByName('watch');
+    var errorMsg;
 
     if (! videoId) {
-      throw TypeError('You need to provide a query parameter `watch`'+
-                      ' with a guid');
+      errorMsg = 'You need to provide a query parameter `watch`'+
+        ' with a guid';
+      showErrorMessage(errorMsg);
+      throw errorMsg;
     }
 
     if (! /^[-a-f0-9]+$/.test(videoId) ) {
-      throw TypeError('The query parameter `watch` contains illegal'+
-                      ' characters');
+      errorMsg = 'The query parameter `watch` contains illegal'+
+        ' characters';
+      showErrorMessage(errorMsg);
+      throw errorMsg;
     }
 
     if (! (videoId && videoId.toString().length === 36)) {
-      throw TypeError('Expected query parameter `watch` to be of'+
-                      ' length 36 (not ' + videoId.toString().length +
-                      ')');
+      errorMsg = 'Expected query parameter `watch` to be of'+
+        ' length 36 (not ' + videoId.toString().length +
+        ')';
+      showErrorMessage(errorMsg);
+      throw errorMsg;
     }
 
     popcorn = Popcorn('#ourvideo');
-    loadSlidesAndChapters(videoId, loadVideoFile);
+
+    loadSlidesAndChapters(videoId, loadVideoFile, showErrorMessage);
+
     addEventListener(document.getElementsByTagName('select')[0],
                      'change', function() {
                         popcorn.currentTime(chapters[this.selectedIndex]);
