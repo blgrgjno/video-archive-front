@@ -24,9 +24,26 @@ http://video/index.html?watch=84db7c47-ee64-41b8-82e2-dcaf515d2cda
 
 ## Build
 
+Although it's possible to use another tool to convert sass -> css, it
+will require some changes to the build system, or a separate build
+process. The easiest is to get ruby and compass up and running
+according to the [installation instructions](http://sass-lang.com/install).
+
+Then you need to install gulp dependencies:
+
+````sh
+$ npm install
+```
+
+Then popcorn.js:
+
+````sh
+$ bower install
+```
+
 To build in the ```dist``` folder:
 
-```bash
+```sh
 $ grunt build
 ```
 
