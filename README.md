@@ -31,13 +31,13 @@ according to the [installation instructions](http://sass-lang.com/install).
 
 Then you need to install gulp dependencies:
 
-````sh
+```sh
 $ npm install
 ```
 
 Then popcorn.js:
 
-````sh
+```sh
 $ bower install
 ```
 
@@ -45,6 +45,14 @@ To build in the ```dist``` folder:
 
 ```sh
 $ grunt build
+```
+
+## Develop
+
+You can start a local developer version with watch/livereload:
+
+```sh
+grunt watch
 ```
 
 ## Filestructure
