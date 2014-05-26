@@ -52,7 +52,7 @@ $ grunt build
 You can start a local developer version with watch/livereload:
 
 ```sh
-grunt watch
+$ grunt watch
 ```
 
 ## Filestructure
