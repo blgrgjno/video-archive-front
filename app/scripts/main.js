@@ -126,7 +126,7 @@
         var i, slideURL;
 
         // Ignore slides not cued
-        if ("false" === slide.isCued[0]) {
+        if ('false' === slide.isCued[0]) {
           return;
         }
 
