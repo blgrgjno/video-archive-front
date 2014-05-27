@@ -3,7 +3,7 @@
   'use strict';
   // main popcorn
   var popcorn = null;
-  var MAX_TIME=99999;
+  var MAX_TIME=99999; 
 
   // Array that stores the chapters
   var chapters = [];
@@ -273,10 +273,26 @@
       .textContent = 'Can\'t play video because of an error: `' + msg + '`';
   }
 
-  function loadVideoFile(data) {
+  /** Flips the horizontal position of video and slides
+   */
+  function flipVideoandSlides() {
+    var videoEl = document.getElementById('ourvideo');
+    var slideEl = document.getElementById('slides');
+    slideEl.parentNode.removeChild(slideEl);
+    videoEl.parentNode.insertBefore(slideEl, videoEl);
+  }
+
+  /** Will be called after json file is loaded
+   * @param {object} The json object
+   */
+  function loadVideoFileCallback(data) {
     var encodedVideoFile = encodeURI(data.videoFile);
     var videoFile = 'data/video/' + encodeURI(data.itemID) + '/' +
           encodedVideoFile;
+
+    if ('left' === data.slideScreenPosition[0]) {
+      flipVideoandSlides();
+    }
 
     // add video to media object
     var scriptEl = document.createElement('source');
@@ -324,7 +340,7 @@
 
     popcorn = Popcorn('#ourvideo');
 
-    loadSlidesAndChapters(videoId, loadVideoFile, showErrorMessage);
+    loadSlidesAndChapters(videoId, loadVideoFileCallback, showErrorMessage);
 
     addEventListener(document.getElementsByTagName('select')[0],
                      'change', function() {
