@@ -3,7 +3,7 @@
   'use strict';
   // main popcorn
   var popcorn = null;
-  var MAX_TIME=99999; 
+  var MAX_TIME=99999;
 
   // Array that stores the chapters
   var chapters = [];
@@ -63,7 +63,10 @@
     var minutes = parseInt(start / 60) % 60;
     var seconds = start % 60;
 
-    var startTimeStr = (hours < 10 ? '0' + hours : hours) + '-' + (minutes < 10 ? '0' + minutes : minutes) + '-' + (seconds < 10 ? '0' + seconds : seconds);
+    var startTimeStr =
+          (hours < 10 ? '0' + hours : hours) + '-' +
+          (minutes < 10 ? '0' + minutes : minutes) + '-' +
+          (seconds < 10 ? '0' + seconds : seconds);
 
     var el = document.querySelector('.selectpicker');
 
@@ -303,6 +306,7 @@
     if (data.poster) {
       addPoster(encodeURI('data/video/' + data.itemID + '/' + data.poster));
     }
+
     updatePageTitle(data.title);
 
     if (document.body.classList) {
