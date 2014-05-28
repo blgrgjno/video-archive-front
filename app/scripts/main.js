@@ -10,6 +10,10 @@
 
   /**
    * Loads a slide
+   * @param {object} slide - The slide to load
+   * @param {number} end - The end time
+   * @param {string} slideURL - URL of slide
+   * @return {boolean} - True if loaded, false if not loaded
    */
   function loadSlide(slide, end, slideURL) {
     var title = slide.title[0];
@@ -32,7 +36,6 @@
     if (popcorn) {
       // dont add if the values are suspect
       if (startTime !== endTime &&
-          (0 !== startTime || MAX_TIME !== endTime) &&
          (startTime < endTime)) {
         console.log('Added slide (start=%d, end=%d)',
                     startTime, endTime);
@@ -43,6 +46,8 @@
           //direction: 'up',
           text: getHTML()
         });
+
+        return true;
       } else {
         console.log('Ignoring slide with start=%d and end=%d',
                     startTime, endTime);
@@ -50,6 +55,8 @@
     } else {
       console.log('Can\'t find popcorn. Ignoring slides');
     }
+
+    return false;
   }
 
   /**
@@ -130,6 +137,7 @@
 
         // Ignore slides not cued
         if ('false' === slide.isCued[0]) {
+          console.log('Ignoring uncued slide');
           return;
         }
 
@@ -155,8 +163,7 @@
                 slide.slideURL[0];
               // set next slides starttime as endtime
               var endTime = slides[i].startTime[0];
-              loadSlide(slide, endTime, slideURL);
-              loaded = true;
+              loaded = loadSlide(slide, endTime, slideURL);
               break;
             }
           }
