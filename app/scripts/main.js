@@ -99,9 +99,16 @@
     request.open('GET', 'data/video/' + videoId + '/meta.json', true);
 
     request.onreadystatechange = function() {
+      var json;
       if (this.readyState === 4) {
         if (this.status >= 200 && this.status < 400) {
           // Success!
+          try  {
+            json = JSON.parse(this.responseText);
+          } catch (ex) {
+            return err('Unable to parse meta.json file `' +
+                       ex.message + '`');
+          }
           return ok(JSON.parse(this.responseText));
         } else {
           return err('Unable to find video');
