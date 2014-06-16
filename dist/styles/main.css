@@ -1,0 +1,152 @@
+/**
+ * video2 - Video arkiv frontend
+ * @version v0.0.2
+ * @link https://github.com/blgrgjno/video-archive-front
+ * @license GPL-2.0
+ */
+body {
+  margin: 0;
+  padding: 0;
+  text-align: left;
+}
+body.has-slides {
+  text-align: center;
+}
+
+a {
+  color: #003173;
+}
+
+.container {
+  width: 975px;
+  display: inline-block;
+}
+
+.panel {
+  background: #fff;
+  height: 370px;
+  padding-top: 0px;
+  position: relative;
+}
+body.has-slides .panel {
+  background: #111;
+  padding-top: 20px;
+}
+
+.selectpicker {
+  display: none;
+  right: 10px;
+  top: 340px;
+  position: absolute;
+  z-index: 10;
+  /* prevent collision with download area */
+  max-width: 500px;
+}
+body.has-slides .selectpicker {
+  display: inline;
+}
+body.no-chapters .selectpicker {
+  display: none;
+}
+
+/* video */
+#ourvideo {
+  width: 540px;
+  height: 304px;
+  display: none;
+}
+body.has-loaded #ourvideo {
+  display: inline;
+}
+
+/* slides */
+#slides {
+  border: 2px solid #eee;
+  margin-left: 4px;
+  margin-right: 4px;
+  display: none;
+  box-shadow: 0 10px 6px -6px #777;
+}
+body.has-loaded #slides {
+  display: inline-block;
+}
+
+.download {
+  display: none;
+  /* initially hidden */
+  width: 540px;
+  text-align: left;
+  padding: 5px;
+  margin: 0px;
+  font-size: 0.8rem;
+  font-family: Arial, sans-serif;
+  display: none;
+}
+body.has-loaded .download {
+  display: block;
+}
+body.has-slides .download {
+  width: 450px;
+  left: 14px;
+  position: relative;
+}
+body.has-slides .download a {
+  color: #FFFFFF;
+}
+
+/* UI error handling */
+.error-message {
+  font-size: 24px;
+  color: #111;
+  font-family: Helvetica;
+  position: fixed;
+  top: 100px;
+  left: 100px;
+  display: none;
+  width: 400px;
+}
+body.has-error .error-message {
+  display: block;
+}
+
+/* Hide it all, if error */
+body.has-error #ourvideo, body.has-error #slides, body.has-error .download {
+  display: none;
+}
+
+.container-narrow > hr {
+  margin: 30px 0;
+}
+
+/* use max width and auto height for slides */
+#slides div, #slides img {
+  width: 400px;
+  height: 304px;
+}
+
+/* Responsive: Portrait tablets and up */
+/*
+@media screen and (min-width: 768px) {
+  .container {
+      max-width: 675px;
+  }
+
+  #ourvideo,#slides {
+      max-width: 300px;
+  }
+}
+
+@media screen and (min-width: 1300px) {
+  .container {
+      min-width: 1300px;
+  }
+  #ourvideo,#slides {
+      float:left;
+      clear:none;
+  }
+  #slides {
+      clear:right;
+      margin-left: 15px;
+  }
+}
+*/
