@@ -1,6 +1,7 @@
 'use strict';
 var gulp = require('gulp');
 var wiredep = require('wiredep').stream;
+var spawn = require('child_process').spawn;
 
 // Used for banners
 var pkg = require('./package.json');
@@ -106,6 +107,24 @@ gulp.task('connect', [], function() {
     root: ['app'],
     port: 9000,
     livereload: true
+  });
+});
+
+gulp.task('test', ['connect'], function() {
+  var child = spawn('mocha-casperjs');
+  child.stdout.on('data', function(data) {
+      console.log(data.toString().replace(/\n$/, ''));
+  });
+
+  child.on('close', function(childReturnCode) {
+    var success = 0 === childReturnCode;
+    if (! success) {
+      $.util.log('mocha-casperjs returned: ' + childReturnCode);
+    } else {
+      $.util.log('finished');
+    }
+    $.connect.serverClose();
+    process.exit(childReturnCode);
   });
 });
 
