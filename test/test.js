@@ -45,4 +45,7 @@ describe('check example video 4a752381-1c08-4fd4-ae6c-60404c1e7f41', function() 
   it('should contain 1 slide', function() {
     'document.getElementById("slides").childNodes.length'.should.evaluate.to.equal(1);
   });
+  it('should contain dl link to mp4 file', function() {
+    '.download a'.should.be.inDOM.and.with.attr('href').that.match(/mp4$/);
+  });
 });
