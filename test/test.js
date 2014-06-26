@@ -50,7 +50,7 @@ describe('check example video 4a752381-1c08-4fd4-ae6c-60404c1e7f41', function() 
   });
 });
 
-describe('check example video fe455e4d-d979-47e2-bf82-4999f24a6b1a', function() {
+describe('check video with slide and chapters (fe455e4d-d979-47e2-bf82-4999f24a6b1a)', function() {
   before(function() {
     casper.start(testpoint +
                  '?watch=fe455e4d-d979-47e2-bf82-4999f24a6b1a');
@@ -72,5 +72,19 @@ describe('check example video fe455e4d-d979-47e2-bf82-4999f24a6b1a', function() 
     casper.then(function() {
       '.selectpicker'.should.have.text(/Hellevik/);
     });
+  });
+});
+
+describe('check video without slide (fe7b7c0e-136d-4ce4-9465-04a7e45bb748)', function() {
+  before(function() {
+    casper.start(testpoint +
+                 '?watch=fe7b7c0e-136d-4ce4-9465-04a7e45bb748');
+    casper.on('remote.message', function(msg) {
+      this.echo('remote message caught: ' + msg);
+    })
+  });
+  it('should show poster', function() {
+    'video'.should.have.attribute('poster');
+    'return document.getElementById("ourvideo").getAttribute("poster")'.should.evaluate.and.match(/mainThumb/);
   });
 });
