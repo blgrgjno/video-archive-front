@@ -41,8 +41,7 @@
 
     if (popcorn) {
       // dont add if the values are suspect
-      if (startTime !== endTime &&
-         (startTime < endTime)) {
+      if (startTime !== endTime) {
         console.log('Added slide (start=%d, end=%d)',
                     startTime, endTime);
         popcorn.footnote({
@@ -145,28 +144,25 @@
       var numChapters = 0;
 
       forEach(slides, function(slide, index) {
+        // Not a slide, but a chapter mark
         var isChapter = ('true' === slide.isChapter[0]);
         var i, slideURL;
 
-        // Ignore slides not cued
+        // Ignore not cued
         if ('false' === slide.isCued[0]) {
           console.log('Ignoring uncued slide');
           return;
         }
 
-        // TODO: add logic to ignore everything except 1 with negative
-        // starttime
-
         if (isChapter) {
-          numChapters++;
           for (i = index; i < numSlidesOrChapters; i++) {
             if ('true' === slides[i].isChapter[0]) {
               loadChapter(slide, slides[i].startTime[0]);
+              numChapters++;
               break;
             }
           }
         } else {
-          numSlides++;
           // make footnote timeline for slides
           var loaded = false;
           for (i = index+1; i < numSlidesOrChapters; i++) {
@@ -177,17 +173,23 @@
               // set next slides starttime as endtime
               var endTime = slides[i].startTime[0];
               loaded = loadSlide(slide, endTime, slideURL);
+              if (loaded) {
+                numSlides++;
+              }
               break;
             }
           }
 
           if (! loaded) {
             // probably only one slide
-            var end = parseInt(data.videoOut[0]) || MAX_TIME;
+            var end = MAX_TIME;
             slideURL = 'data/video/' +
               encodeURI(data.itemID) + '/timeline/' +
               slide.slideURL[0];
-            loadSlide(slide, end, slideURL);
+            loaded = loadSlide(slide, end, slideURL);
+            if (loaded) {
+              numSlides++;
+            }
           }
         }
       });
