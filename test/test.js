@@ -49,3 +49,23 @@ describe('check example video 4a752381-1c08-4fd4-ae6c-60404c1e7f41', function() 
     '.download a'.should.be.inDOM.and.with.attr('href').that.match(/mp4$/);
   });
 });
+
+describe('check example video fe455e4d-d979-47e2-bf82-4999f24a6b1a', function() {
+  before(function() {
+    casper.start(testpoint +
+                 '?watch=fe455e4d-d979-47e2-bf82-4999f24a6b1a');
+/*    casper.on('remote.message', function(msg) {
+      this.echo('remote message caught: ' + msg);
+    })*/
+  });
+  it('should show slides', function() {
+    casper.then(function() {
+      'body.has-slides'.should.be.inDOM;
+    });
+  });
+  it('should contain 33 slides', function() {
+    casper.then(function() {
+      'document.querySelectorAll("#slides > div").length'.should.evaluate.to.equal(33);
+    });
+  });
+});
