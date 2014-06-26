@@ -68,4 +68,9 @@ describe('check example video fe455e4d-d979-47e2-bf82-4999f24a6b1a', function() 
       'document.querySelectorAll("#slides > div").length'.should.evaluate.to.equal(33);
     });
   });
+  it('should contain chapter 3', function() {
+    casper.then(function() {
+      '.selectpicker'.should.have.text(/Hellevik/);
+    });
+  });
 });
