@@ -166,7 +166,8 @@
           // make footnote timeline for slides
           var loaded = false;
           for (i = index+1; i < numSlidesOrChapters; i++) {
-            if ('false' === slides[i].isChapter[0]) {
+            if ('false' === slides[i].isChapter[0] &&
+              'false' !== slides[i].isCued[0]) {
               slideURL = 'data/video/' +
                 encodeURI(data.itemID) + '/timeline/' +
                 slide.slideURL[0];
